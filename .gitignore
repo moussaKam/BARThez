@@ -1,3 +1,9 @@
+summarization_data_title_barthez/*spm*
+summarization_data_title_barthez/data-bin
+summarization_data_title_barthez/*txt
+barthez.base
+barthez.base/*
+summarization_data
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
