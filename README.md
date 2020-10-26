@@ -6,7 +6,7 @@ A french sequence to sequence pretrained model based on [BART](https://github.co
 BARThez is pretrained by learning to reconstruct a corrupted input sentence. A corpus of 66GB of french raw text is used to carry out the pretraining. <br>
 Unlike already existing BERT-based French language models such as CamemBERT and FlauBERT, BARThez is particularly well-suited for generative tasks, since not only its encoder but also its decoder is pretrained. 
 
-In addition to BARThez that is pretrained from scratch, we continue the pretraining of a multilingual BART [mBART](https://github.com/pytorch/fairseq/tree/master/examples/mbart) which boosted its performance in both discriminative and generative tasks. We call the french adapted version mBART_fr.
+In addition to BARThez that is pretrained from scratch, we continue the pretraining of a multilingual BART [mBART](https://github.com/pytorch/fairseq/tree/master/examples/mbart) which boosted its performance in both discriminative and generative tasks. We call the french adapted version mBARThez.
 
 | Model         | Architecture  | #layers | #params | Link  |
 | ------------- |:-------------:| :-----:|:-----:|:-----:|
