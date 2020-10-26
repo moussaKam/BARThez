@@ -1,6 +1,9 @@
-summarization_data_title_barthez/*spm*
+summarization_data_title_barthez/*.spm.*
 summarization_data_title_barthez/data-bin
 summarization_data_title_barthez/*txt
+
+experiments/checkpoints
+experiments/tensorboard_logs
 barthez.base
 barthez.base/*
 summarization_data

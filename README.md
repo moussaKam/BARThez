@@ -26,11 +26,11 @@ pip install --editable ./
 #### Sentencepiece Tokenization
 Install sentencepiece from [here](https://github.com/google/sentencepiece) <br> 
 Encode the data using `spm_encode`. In total there will be 6 files to tokenize. <br>
-You can refer to `encode_spm.sh` script. 
+You can refer to `summarization_data_title_barthez/encode_spm.sh` script. 
 
 #### Data binarization. 
 To be able to use the data for training, it should be first preprocessed using `fairseq-preprocess`. <br>
-Refer to `binarize_summarization.sh` script.
+Refer to `summarization_data_title_barthez/binarize_summarization.sh` script.
 
 #### Train the model.
 It's time to train the model.  <br> 
