@@ -125,4 +125,34 @@ Use the script `compute_mean_std.py`:
 ```
 python compute_mean_std.py --path_events experiments/tensorboard_logs/sentence_prediction/PAWSX/barthez/ms32_mu23200_lr1e-04_me10_dws1/
 ```
-In case you ran the model for multiple seeds, this script helps getting the mean, the median and the standard deviation of the score. The valid score corresponds to the best valid score across the epochs, and the test score corresponds to the test score of the epoch with the best valid score.
+In case you ran the training for multiple seeds, this script helps getting the mean, the median and the standard deviation of the scores. The valid score corresponds to the best valid score across the epochs, and the test score corresponds to the test score of the epoch with the best valid score.
+
+#### Inference
+For inference you can use the following code:
+```
+from fairseq.models.bart import BARTModel
+
+barthez = BARTModel.from_pretrained(
+    '.',
+    checkpoint_file='experiments/checkpoints/sentence_prediction/PAWSX/barthez/ms32_mu23200_lr1e-04_me10_dws1/1/checkpoint_best.pt',
+    data_name_or_path='discriminative_tasks_data/PAWSX/data-bin/',
+    bpe='sentencepiece',
+    sentencepiece_vocab='barthez.base/sentence.bpe.model',
+    task='sentence_prediction'
+)
+
+label_fn = lambda label: barthez.task.label_dictionary.string(
+    [label + barthez.task.label_dictionary.nspecial]
+)
+barthez.cuda()
+barthez.eval()
+
+sent1 = "En 1953, l'équipe a également effectué une tournée en Australie ainsi qu'en Asie en août 1959."
+sent2 = "L’équipe effectua également une tournée en Australie en 1953 et en Asie en août 1959."
+
+tokens = barthez.encode(sent1, sent2, add_if_not_exist=False)
+prediction = barthez.predict('sentence_classification_head', tokens).argmax().item()
+prediction_label = int(label_fn(prediction))
+print(prediction_label)
+```
+
