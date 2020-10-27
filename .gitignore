@@ -1,11 +1,15 @@
 summarization_data_title_barthez/*.spm.*
 summarization_data_title_barthez/data-bin
 summarization_data_title_barthez/*txt
+discriminative_tasks_data/*
 
 experiments/checkpoints
 experiments/tensorboard_logs
 barthez.base
 barthez.base/*
+mbarthez.large
+mbarthez.large/*
+
 summarization_data
 # Byte-compiled / optimized / DLL files
 __pycache__/
