@@ -1,5 +1,5 @@
 # BARThez
-A french sequence to sequence pretrained model.
+A french sequence to sequence pretrained model. [https://arxiv.org/abs/2010.12321]
 
 ## Introduction
 A french sequence to sequence pretrained model based on [BART](https://github.com/pytorch/fairseq/tree/master/examples/bart). <br>
@@ -14,7 +14,10 @@ In addition to BARThez that is pretrained from scratch, we continue the pretrain
 | mBARThez      | LARGE         | 24     | 561M  |[Link]() |
 
 ## Summarization
-Thanks to its encoder-decoder structure, BARThez can perform generative tasks such as summarization. In the following, we provide an example on how to fine-tune BARThez on title generation in OrangesSum:  
+Thanks to its encoder-decoder structure, BARThez can perform generative tasks such as summarization. In the following, we provide an example on how to fine-tune BARThez on title generation task from OrangesSum dataset:  
+
+#### Get the dataset
+Please follow the steps [here](https://github.com/moussaKam/OrangeSum) to get OrangeSum. 
 
 #### Install fairseq
 ```
@@ -30,9 +33,9 @@ You can refer to `summarization_data_title_barthez/encode_spm.sh` script.
 
 #### Data binarization. 
 To be able to use the data for training, it should be first preprocessed using `fairseq-preprocess`. <br>
-Refer to `summarization_data_title_barthez/binarize_summarization.sh` script.
+Refer to `summarization_data_title_barthez/binarize.sh` script.
 
 #### Train the model.
 It's time to train the model.  <br> 
-Use the script in `BARThez/experiments/title_generation/barthez_summarization_title.sh` <br> 
+Use the script in `experiments/title_generation/barthez_summarization_title.sh` <br> 
 The Training takes roughly 3 hours on 1GPU TITAN RTX.
