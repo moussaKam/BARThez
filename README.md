@@ -38,4 +38,91 @@ Refer to `summarization_data_title_barthez/binarize.sh` script.
 #### Train the model.
 It's time to train the model.  <br> 
 Use the script in `experiments/title_generation/barthez_summarization_title.sh` <br> 
+```
+cd experiments/title_generation/
+bash barthez_summarization_title.sh 1
+```
+1 refers to the seed <br>
 The Training takes roughly 3 hours on 1GPU TITAN RTX.
+
+#### Generate summaries.
+To generate the summaries use `generate_summary.py` script:
+```
+python generate_summary.py \
+    --model_path experiments/checkpoints/translation/summarization_title_fr/barthez/ms4096_mu60000_lr1e-04_me50_dws1/1/checkpoint_best.pt \
+    --output_path experiments/checkpoints/translation/summarization_title_fr/barthez/ms4096_mu60000_lr1e-04_me50_dws1/1/output.txt \ 
+    --source_text summarization_data_title_barthez/test-article.txt \
+    --data_path summarization_data_title_barthez/data-bin/ \
+    --sentence_piece_model barthez.base/sentence.bpe.model
+```
+we use [rouge-score](https://pypi.org/project/rouge-score/) to compute ROUGE score. No stemming is applied before evaluation.
+
+## Discriminative tasks
+In addition to text generation, BARThez can perform discriminative tasks. For example to fine-tune the model on PAWSX task:
+
+#### Dataset 
+To get the dataset use `FLUE/prepare_pawsx.py`:
+```
+cd discriminative_tasks_data/
+python ../FLUE/prepare_pawsx.py
+```
+
+#### Sentencepiece Tokenization
+```
+SPLITS="train test valid"
+SENTS="sent1 sent2"
+
+for SENT in $SENTS
+do
+    for SPLIT in $SPLITS
+    do
+        spm_encode --model ../../barthez.base/sentence.bpe.model < $SPLIT.$SENT > $SPLIT.spm.$SENT
+    done
+done
+```
+
+#### Data binarization.
+```
+DICT=../../barthez.base/dict.txt
+
+fairseq-preprocess \
+  --only-source \
+  --trainpref train.spm.sent1 \
+  --validpref valid.spm.sent1 \
+  --testpref test.spm.sent1 \
+  --srcdict ${DICT} \
+  --destdir data-bin/input0 \
+  --workers 8
+
+fairseq-preprocess \
+  --only-source \
+  --trainpref train.spm.sent2 \
+  --validpref valid.spm.sent2 \
+  --testpref test.spm.sent2 \
+  --srcdict ${DICT} \
+  --destdir data-bin/input1 \
+  --workers 8 
+
+fairseq-preprocess \
+  --only-source \
+  --trainpref train.label \
+  --validpref valid.label \
+  --testpref test.label \
+  --destdir data-bin/label \
+  --workers 8
+```
+#### Train the model.
+
+Use the script `experiments/PAWSX/experiment_barthez.sh` <br> 
+```
+cd experiments/PAWSX/
+bash experiment_barthez.sh 1
+```
+1 refers to the seed <br>
+
+#### Get valid and test accuracy:
+Use the script `compute_mean_std.py`:
+```
+python compute_mean_std.py --path_events experiments/tensorboard_logs/sentence_prediction/PAWSX/barthez/ms32_mu23200_lr1e-04_me10_dws1/
+```
+In case you ran the model for multiple seeds, this script helps getting the mean, the median and the standard deviation of the score. The valid score corresponds to the best valid score across the epochs, and the test score corresponds to the test score of the epoch with the best valid score.
