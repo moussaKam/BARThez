@@ -10,8 +10,8 @@ In addition to BARThez that is pretrained from scratch, we continue the pretrain
 
 | Model         | Architecture  | #layers | #params | Link  |
 | ------------- |:-------------:| :-----:|:-----:|:-----:|
-| BARThez       | BASE          | 12     | 216M  | [Link]() |
-| mBARThez      | LARGE         | 24     | 561M  |[Link]() |
+| BARThez       | BASE          | 12     | 216M  | [Link](https://www.dropbox.com/s/a1y5avgb8uh2v3s/barthez.base.zip?dl=1) |
+| mBARThez      | LARGE         | 24     | 561M  |[Link](https://www.dropbox.com/s/oo9tokh09rioq0m/mbarthez.large.zip?dl=1) |
 
 ## Summarization
 Thanks to its encoder-decoder structure, BARThez can perform generative tasks such as summarization. In the following, we provide an example on how to fine-tune BARThez on title generation task from OrangesSum dataset:  
@@ -129,7 +129,7 @@ In case you ran the training for multiple seeds, this script helps getting the m
 
 #### Inference
 For inference you can use the following code:
-```
+```python
 from fairseq.models.bart import BARTModel
 
 barthez = BARTModel.from_pretrained(
