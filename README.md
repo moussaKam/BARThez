@@ -63,12 +63,15 @@ In addition to text generation, BARThez can perform discriminative tasks. For ex
 #### Dataset 
 To get the dataset use `FLUE/prepare_pawsx.py`:
 ```
+mkdir discriminative_tasks_data/
 cd discriminative_tasks_data/
 python ../FLUE/prepare_pawsx.py
 ```
 
 #### Sentencepiece Tokenization
 ```
+cd PAWSX
+
 SPLITS="train test valid"
 SENTS="sent1 sent2"
 
