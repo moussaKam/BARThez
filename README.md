@@ -158,4 +158,12 @@ prediction = barthez.predict('sentence_classification_head', tokens).argmax().it
 prediction_label = int(label_fn(prediction))
 print(prediction_label)
 ```
-
+If you use the code of any of the models, you can cite the following paper:
+```
+@article{eddine2020barthez,
+  title={BARThez: a Skilled Pretrained French Sequence-to-Sequence Model},
+  author={Eddine, Moussa Kamal and Tixier, Antoine J-P and Vazirgiannis, Michalis},
+  journal={arXiv preprint arXiv:2010.12321},
+  year={2020}
+}
+```
