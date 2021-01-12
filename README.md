@@ -158,6 +158,34 @@ prediction = barthez.predict('sentence_classification_head', tokens).argmax().it
 prediction_label = int(label_fn(prediction))
 print(prediction_label)
 ```
+## Our model is now on HuggingFace!
+
+```python
+text_sentence = "Paris est la capitale de la <mask>"
+import torch
+
+from transformers import (
+    BarthezTokenizer,
+    BartForConditionalGeneration
+)
+
+barthez_tokenizer = BarthezTokenizer.from_pretrained("moussaKam/barthez")
+barthez_model = BartForConditionalGeneration.from_pretrained("moussaKam/barthez")
+
+input_ids = torch.tensor(
+    [barthez_tokenizer.encode(text_sentence, add_special_tokens=True)]
+)
+mask_idx = torch.where(input_ids == barthez_tokenizer.mask_token_id)[1].tolist()[0]
+
+barthez_model.eval()
+predict = barthez_model.forward(input_ids)[0]
+
+barthez_tokenizer.decode(predict[:, mask_idx, :].topk(5).indices[0])
+```
+```
+output: 'France culture francophonie gastronomie mode'
+```
+
 If you use the code or any of the models, you can cite the following paper:
 ```
 @article{eddine2020barthez,
