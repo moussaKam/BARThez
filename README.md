@@ -185,6 +185,32 @@ barthez_tokenizer.decode(predict[:, mask_idx, :].topk(5).indices[0])
 ```
 output: 'France culture francophonie gastronomie mode'
 ```
+You can use the [checkpoint](https://huggingface.co/moussaKam/barthez-orangesum-title) fine-tuned on `OrangeSum Title`, to generate abstractive title to you articles.
+```python
+text_sentence = "Citant les préoccupations de ses clients dénonçant des cas de censure après la suppression du compte de Trump, un fournisseur d'accès Internet de l'État de l'Idaho a décidé de bloquer Facebook et Twitter. La mesure ne concernera cependant que les clients mécontents de la politique de ces réseaux sociaux."
+
+import torch
+
+from transformers import (
+    BarthezTokenizer,
+    BartForConditionalGeneration
+)
+
+barthez_tokenizer = BarthezTokenizer.from_pretrained("moussaKam/barthez-orangesum-title")
+barthez_model = AutoModelForMaskedLM.from_pretrained("moussaKam/barthez-orangesum-title")
+
+input_ids = torch.tensor(
+    [barthez_tokenizer.encode(text_sentence, add_special_tokens=True)]
+)
+
+barthez_model.eval()
+predict = barthez_model.generate(input_ids, max_length=50)[0]
+
+barthez_tokenizer.decode(predict, skip_special_tokens=True)
+```
+```
+output: "États-Unis : un fournisseur d'accès Internet bloque Facebook et Twitter"
+```
 
 If you use the code or any of the models, you can cite the following paper:
 ```
