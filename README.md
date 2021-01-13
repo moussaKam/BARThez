@@ -197,7 +197,7 @@ from transformers import (
 )
 
 barthez_tokenizer = BarthezTokenizer.from_pretrained("moussaKam/barthez-orangesum-title")
-barthez_model = AutoModelForMaskedLM.from_pretrained("moussaKam/barthez-orangesum-title")
+barthez_model = BartForConditionalGeneration.from_pretrained("moussaKam/barthez-orangesum-title")
 
 input_ids = torch.tensor(
     [barthez_tokenizer.encode(text_sentence, add_special_tokens=True)]
