@@ -166,11 +166,11 @@ import torch
 
 from transformers import (
     BarthezTokenizer,
-    BartForConditionalGeneration
+    AutoModelForSeq2SeqLM
 )
 
 barthez_tokenizer = BarthezTokenizer.from_pretrained("moussaKam/barthez")
-barthez_model = BartForConditionalGeneration.from_pretrained("moussaKam/barthez")
+barthez_model = AutoModelForSeq2SeqLM.from_pretrained("moussaKam/barthez")
 
 input_ids = torch.tensor(
     [barthez_tokenizer.encode(text_sentence, add_special_tokens=True)]
@@ -193,11 +193,11 @@ import torch
 
 from transformers import (
     BarthezTokenizer,
-    BartForConditionalGeneration
+    AutoModelForSeq2SeqLM
 )
 
 barthez_tokenizer = BarthezTokenizer.from_pretrained("moussaKam/barthez-orangesum-title")
-barthez_model = BartForConditionalGeneration.from_pretrained("moussaKam/barthez-orangesum-title")
+barthez_model = AutoModelForSeq2SeqLM.from_pretrained("moussaKam/barthez-orangesum-title")
 
 input_ids = torch.tensor(
     [barthez_tokenizer.encode(text_sentence, add_special_tokens=True)]
