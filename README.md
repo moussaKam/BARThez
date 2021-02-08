@@ -13,7 +13,68 @@ In addition to BARThez that is pretrained from scratch, we continue the pretrain
 | BARThez       | BASE          | 12     | 216M  | [Link](https://www.dropbox.com/s/a1y5avgb8uh2v3s/barthez.base.zip?dl=1) |
 | mBARThez      | LARGE         | 24     | 561M  |[Link](https://www.dropbox.com/s/oo9tokh09rioq0m/mbarthez.large.zip?dl=1) |
 
-## Summarization
+## On Hugging Face
+
+Our models are now on Hugging face!
+
+| Barthez             |  Barthez fine-tuned on abstract generation | Barthez fine-tuned on title generation |
+:-------------------------:|:-------------------------:|------------------------------:|
+[![](pics/barthez.png)](https://huggingface.co/moussaKam/barthez)  |  [![](pics/barthez-abstract.png)](https://huggingface.co/moussaKam/barthez-orangesum-abstract) | [![](pics/barthez-title.png)](https://huggingface.co/moussaKam/barthez-orangesum-title)
+
+### Summarization
+
+To fine-tune the model on a summarization dataset you can follow the `seq2seq` [example](https://github.com/huggingface/transformers/tree/master/examples/seq2seq) in the `Transformers` library.
+
+For example:
+```
+python examples/seq2seq/run_seq2seq.py \
+    --model_name_or_path moussaKam/barthez \
+    --do_train     --do_eval \
+    --task summarization \
+    --train_file ../OrangeSumTransformers/abstract_generation/train.csv \
+    --validation_file ../OrangeSumTransformers/abstract_generation/val.csv \
+    --output_dir orangesum_abstract_output \
+    --per_device_train_batch_size=4 \
+    --per_device_eval_batch_size=4 \
+    --overwrite_output_dir \
+    --predict_with_generate \
+    --fp16 \
+    --text_column documents \
+    --summary_column summaries \
+    --num_train_epochs 10 \
+    --save_steps 10000
+``` 
+Make sure that your dataset files are in the required format.
+
+For inference you can use the following code:
+```
+text_sentence = "Citant les préoccupations de ses clients dénonçant des cas de censure après la suppression du compte de Trump, un fournisseur d'accès Internet de l'État de l'Idaho a décidé de bloquer Facebook et Twitter. La mesure ne concernera cependant que les clients mécontents de la politique de ces réseaux sociaux."
+
+import torch
+
+from transformers import (
+    BarthezTokenizer,
+    AutoModelForSeq2SeqLM
+)
+
+barthez_tokenizer = BarthezTokenizer.from_pretrained("moussaKam/barthez")
+barthez_model = AutoModelForSeq2SeqLM.from_pretrained("moussaKam/barthez-orangesum-abstract")
+
+input_ids = torch.tensor(
+    [barthez_tokenizer.encode(text_sentence, add_special_tokens=True)]
+)
+
+barthez_model.eval()
+predict = barthez_model.generate(input_ids, max_length=100)[0]
+
+
+barthez_tokenizer.decode(predict, skip_special_tokens=True)
+```
+
+
+## On Fairseq
+
+### Summarization
 Thanks to its encoder-decoder structure, BARThez can perform generative tasks such as summarization. In the following, we provide an example on how to fine-tune BARThez on title generation task from OrangesSum dataset:  
 
 #### Get the dataset
@@ -157,59 +218,6 @@ tokens = barthez.encode(sent1, sent2, add_if_not_exist=False)
 prediction = barthez.predict('sentence_classification_head', tokens).argmax().item()
 prediction_label = int(label_fn(prediction))
 print(prediction_label)
-```
-## Our model is now on HuggingFace!
-
-```python
-text_sentence = "Paris est la capitale de la <mask>"
-import torch
-
-from transformers import (
-    BarthezTokenizer,
-    AutoModelForSeq2SeqLM
-)
-
-barthez_tokenizer = BarthezTokenizer.from_pretrained("moussaKam/barthez")
-barthez_model = AutoModelForSeq2SeqLM.from_pretrained("moussaKam/barthez")
-
-input_ids = torch.tensor(
-    [barthez_tokenizer.encode(text_sentence, add_special_tokens=True)]
-)
-mask_idx = torch.where(input_ids == barthez_tokenizer.mask_token_id)[1].tolist()[0]
-
-barthez_model.eval()
-predict = barthez_model.forward(input_ids)[0]
-
-barthez_tokenizer.decode(predict[:, mask_idx, :].topk(5).indices[0])
-```
-```
-output: 'France culture francophonie gastronomie mode'
-```
-You can use the [checkpoint](https://huggingface.co/moussaKam/barthez-orangesum-title) fine-tuned on `OrangeSum Title`, to generate abstractive title to you articles.
-```python
-text_sentence = "Citant les préoccupations de ses clients dénonçant des cas de censure après la suppression du compte de Trump, un fournisseur d'accès Internet de l'État de l'Idaho a décidé de bloquer Facebook et Twitter. La mesure ne concernera cependant que les clients mécontents de la politique de ces réseaux sociaux."
-
-import torch
-
-from transformers import (
-    BarthezTokenizer,
-    AutoModelForSeq2SeqLM
-)
-
-barthez_tokenizer = BarthezTokenizer.from_pretrained("moussaKam/barthez-orangesum-title")
-barthez_model = AutoModelForSeq2SeqLM.from_pretrained("moussaKam/barthez-orangesum-title")
-
-input_ids = torch.tensor(
-    [barthez_tokenizer.encode(text_sentence, add_special_tokens=True)]
-)
-
-barthez_model.eval()
-predict = barthez_model.generate(input_ids, max_length=50)[0]
-
-barthez_tokenizer.decode(predict, skip_special_tokens=True)
-```
-```
-output: "États-Unis : un fournisseur d'accès Internet bloque Facebook et Twitter"
 ```
 
 If you use the code or any of the models, you can cite the following paper:
