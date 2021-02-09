@@ -17,8 +17,8 @@ In addition to BARThez that is pretrained from scratch, we continue the pretrain
 
 Our models are now on Hugging face!
 
-| Barthez             |  Barthez fine-tuned on abstract generation | Barthez fine-tuned on title generation |
-:-------------------------:|:-------------------------:|------------------------------:|
+| BARThez             |  BARThez fine-tuned on abstract generation | BARThez fine-tuned on title generation |
+:-------------------------:|:-------------------------:|:------------------------------:|
 [![](pics/barthez.png)](https://huggingface.co/moussaKam/barthez)  |  [![](pics/barthez-abstract.png)](https://huggingface.co/moussaKam/barthez-orangesum-abstract) | [![](pics/barthez-title.png)](https://huggingface.co/moussaKam/barthez-orangesum-title)
 
 ### Summarization
@@ -47,7 +47,7 @@ python examples/seq2seq/run_seq2seq.py \
 Make sure that your dataset files are in the required format.
 
 For inference you can use the following code:
-```
+```python
 text_sentence = "Citant les préoccupations de ses clients dénonçant des cas de censure après la suppression du compte de Trump, un fournisseur d'accès Internet de l'État de l'Idaho a décidé de bloquer Facebook et Twitter. La mesure ne concernera cependant que les clients mécontents de la politique de ces réseaux sociaux."
 
 import torch
