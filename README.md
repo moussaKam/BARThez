@@ -53,11 +53,11 @@ text_sentence = "Citant les préoccupations de ses clients dénonçant des cas d
 import torch
 
 from transformers import (
-    BarthezTokenizer,
+    AutoTokenizer,
     AutoModelForSeq2SeqLM
 )
 
-barthez_tokenizer = BarthezTokenizer.from_pretrained("moussaKam/barthez")
+barthez_tokenizer = AutoTokenizer.from_pretrained("moussaKam/barthez")
 barthez_model = AutoModelForSeq2SeqLM.from_pretrained("moussaKam/barthez-orangesum-abstract")
 
 input_ids = torch.tensor(
@@ -70,6 +70,49 @@ predict = barthez_model.generate(input_ids, max_length=100)[0]
 
 barthez_tokenizer.decode(predict, skip_special_tokens=True)
 ```
+### Text Classification
+
+It is possible to use BARThez for text classification tasks, such as sentiment analysis.
+
+To fine-tune the model you can directly use the `text-classification` [example](https://github.com/huggingface/transformers/tree/master/examples/text-classification) in the `Transformers` library.
+```
+python run_glue.py \
+   --model_name_or_path moussaKam/barthez \
+   --tokenizer_name moussaKam/barthez \
+   --train_file  PATH_TO_TRAIN_SET \
+   --validation_file PATH_TO_VALID_SET \
+   --do_train  --do_eval \
+   --max_seq_length 1024 \
+   --per_device_train_batch_size 4 \
+   --learning_rate 2e-5 \
+   --num_train_epochs 10 \
+   --output_dir cls_checkpoints \
+   --overwrite_output_dir \
+   --fp16
+```
+
+For inference:
+```python
+text_sentence = "Barthez est le meilleur gardien du monde"
+import torch
+
+from transformers import (
+    AutoTokenizer,
+    AutoModelForSequenceClassification
+)
+
+barthez_tokenizer = AutoTokenizer.from_pretrained("moussaKam/barthez")
+barthez_model = AutoModelForSequenceClassification.from_pretrained("moussaKam/barthez-sentiment-classification")
+
+input_ids = torch.tensor(
+    [barthez_tokenizer.encode(text_sentence, add_special_tokens=True)]
+)
+
+predict = barthez_model.forward(input_ids)[0]
+
+print("positive" if predict.argmax(dim=-1).item()==1 else "negative") 
+```
+
 
 
 ## On Fairseq
@@ -118,7 +161,7 @@ python generate_summary.py \
 ```
 we use [rouge-score](https://pypi.org/project/rouge-score/) to compute ROUGE score. No stemming is applied before evaluation.
 
-## Discriminative tasks
+### Text Classification
 In addition to text generation, BARThez can perform discriminative tasks. For example to fine-tune the model on PAWSX task:
 
 #### Dataset 
