@@ -23,6 +23,11 @@ Our models are now on Hugging face!
 
 ### Summarization
 
+First make sure that you have sentencepiece installed:
+```
+pip install sentencepiece
+```
+
 To fine-tune the model on a summarization dataset you can follow the `seq2seq` [example](https://github.com/huggingface/transformers/tree/master/examples/seq2seq) in the `Transformers` library.
 
 For example:
