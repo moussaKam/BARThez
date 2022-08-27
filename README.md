@@ -15,7 +15,7 @@ In addition to BARThez that is pretrained from scratch, we continue the pretrain
 
 ## On Hugging Face
 
-Our models are now on Hugging face!
+Our models are now on Hugging face, check BARThez [here](https://huggingface.co/moussaKam/barthez) and mBARThez [here](https://huggingface.co/moussaKam/mbarthez)!
 
 | BARThez             |  BARThez fine-tuned on abstract generation | BARThez fine-tuned on title generation |
 :-------------------------:|:-------------------------:|:------------------------------:|
